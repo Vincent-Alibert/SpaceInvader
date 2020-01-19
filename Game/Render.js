@@ -1,33 +1,43 @@
+"use strict";
+//
 // Renderer Object
+//
 var renderer = (function() {
-  function _drawEnemy(context, enemy) {
-    context.fillStyle = "red";
-    context.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+  var _canvas = document.getElementById("game-layer"),
+    _context = _canvas.getContext("2d"),
+    _enemyColors = [
+      "rgb(150, 7, 7)",
+      "rgb(150, 89, 7)",
+      "rgb(56, 150, 7)",
+      "rgb(7, 150, 122)",
+      "rgb(46, 7, 150)"
+    ];
+
+  function _drawRectangle(color, entity) {
+    _context.fillStyle = color;
+    _context.fillRect(
+      entity.position.x - entity.width / 2,
+      entity.position.y - entity.height / 2,
+      entity.width,
+      entity.height
+    );
   }
 
-  function _drawPlayer(context, player) {
-    context.fillStyle = "blue";
-    context.fillRect(player.x, player.y, player.width, player.height);
-  }
-
-  function _render() {
-    var canvas = document.getElementById("game-layer");
-    var context = canvas.getContext("2d");
-
-    context.fillStyle = "gray";
-    context.fillRect(0, 0, canvas.width, canvas.height);
+  function _render(dt) {
+    _context.fillStyle = "black";
+    _context.fillRect(0, 0, _canvas.width, _canvas.height);
 
     var i,
       entity,
       entities = game.entities();
 
-    for (i = 0; i < entities.length; i++) {
+    for (i = entities.length - 1; i >= 0; i--) {
       entity = entities[i];
 
       if (entity instanceof Enemy) {
-        _drawEnemy(context, entity);
+        _drawRectangle(_enemyColors[entity.rank], entity);
       } else if (entity instanceof Player) {
-        _drawPlayer(context, entity);
+        _drawRectangle("rgb(255, 255, 0)", entity);
       }
     }
   }

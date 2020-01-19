@@ -1,12 +1,19 @@
 "use strict";
+//
 // Physics Object
+//
 var physics = (function() {
-  function _update() {
+  function _update(dt) {
     var i,
+      e,
+      velocity,
       entities = game.entities();
 
-    for (i = 0; i < entities.length; i++) {
-      entities[i].y += entities[i].direction;
+    for (i = entities.length - 1; i >= 0; i--) {
+      e = entities[i];
+      velocity = vectorScalarMultiply(e.direction, e.speed);
+
+      e.position = vectorAdd(e.position, vectorScalarMultiply(velocity, dt));
     }
   }
 
@@ -14,5 +21,4 @@ var physics = (function() {
     update: _update
   };
 })();
-
 export default physics;

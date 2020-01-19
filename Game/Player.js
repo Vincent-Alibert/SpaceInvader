@@ -1,15 +1,18 @@
 "use strict";
-function Player(x, y) {
-  this.x = x;
-  this.y = y;
+function Player(position, speed, direction) {
+  Entity.call(this, position, speed, direction);
+
   this.width = 20;
-  this.height = 20;
-  this.direction = -1;
+  this.height = 10;
 }
-Player.prototype.update = function() {
-  if (this.y <= 0 || this.y + this.height >= game.gameFieldHeight()) {
-    this.direction *= -1;
+Player.prototype = Object.create(Entity.prototype);
+
+Player.prototype.update = function(dt) {
+  Entity.prototype.update.call(this, dt);
+  if (
+    this.collisionRect().top() <= 0 ||
+    this.collisionRect().bottom() >= game.gameFieldRect().bottom()
+  ) {
+    this.direction.y *= -1;
   }
 };
-
-export default Player;
