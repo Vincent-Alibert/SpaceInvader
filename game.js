@@ -1,7 +1,4 @@
 "use strict";
-//randomInt
-function randomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
-}
+import game from "./Game/Game.js";
 
 game.start();

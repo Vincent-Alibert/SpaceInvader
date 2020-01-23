@@ -1,4 +1,7 @@
 "use strict";
+import Entity from "./Entity.js";
+import game from "./Game.js";
+
 function Player(position, speed, direction) {
   Entity.call(this, position, speed, direction);
 
@@ -16,3 +19,5 @@ Player.prototype.update = function(dt) {
     this.direction.y *= -1;
   }
 };
+
+export default Player;

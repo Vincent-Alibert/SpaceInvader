@@ -2,7 +2,7 @@
 //
 // Vector2d Object
 //
-var Vector2d = function(x, y) {
+const Vector2d = function(x, y) {
   this.x = x;
   this.y = y;
 };
@@ -24,7 +24,7 @@ export function vectorLength(v) {
 }
 
 export function vectorNormalize(v) {
-  var reciprocal = 1.0 / (vectorLength(v) + 1.0e-37); // Prevent division by zero.
+  const reciprocal = 1.0 / (vectorLength(v) + 1.0e-37); // Prevent division by zero.
   return vectorScalarMultiply(v, reciprocal);
 }
 

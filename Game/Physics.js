@@ -1,15 +1,16 @@
 "use strict";
+import game from "./Game.js";
+import { vectorAdd, vectorScalarMultiply } from "./Vector.js";
 //
 // Physics Object
 //
-var physics = (function() {
+const physics = (function() {
   function _update(dt) {
-    var i,
-      e,
+    let e,
       velocity,
       entities = game.entities();
 
-    for (i = entities.length - 1; i >= 0; i--) {
+    for (let i = entities.length - 1; i >= 0; i--) {
       e = entities[i];
       velocity = vectorScalarMultiply(e.direction, e.speed);
 

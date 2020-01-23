@@ -1,9 +1,15 @@
 "use strict";
+import Rectangle from "./Rectangle.js";
+import Player from "./Player.js";
+import Enemy from "./Enemy.js";
+import Vector2d from "./Vector.js";
+import physics from "./Physics.js";
+import renderer from "./Render.js";
 //
 // Game Object
 //
-var game = (function() {
-  var _entities,
+const game = (function() {
+  let _entities,
     _enemies,
     _player,
     _gameFieldRect,
@@ -54,11 +60,10 @@ var game = (function() {
   }
 
   function _update() {
-    var dt = 1 / 60; // Fixed 60 frames per second time step
+    const dt = 1 / 60; // Fixed 60 frames per second time step
     physics.update(dt);
 
-    var i;
-    for (i = _entities.length - 1; i >= 0; i--) {
+    for (let i = _entities.length - 1; i >= 0; i--) {
       _entities[i].update(dt);
     }
 

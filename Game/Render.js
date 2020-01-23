@@ -1,9 +1,12 @@
 "use strict";
+import game from "./Game.js";
+import Enemy from "./Enemy.js";
+import Player from "./Player.js";
 //
 // Renderer Object
 //
-var renderer = (function() {
-  var _canvas = document.getElementById("game-layer"),
+const renderer = (function() {
+  const _canvas = document.getElementById("game-layer"),
     _context = _canvas.getContext("2d"),
     _enemyColors = [
       "rgb(150, 7, 7)",
@@ -27,11 +30,10 @@ var renderer = (function() {
     _context.fillStyle = "black";
     _context.fillRect(0, 0, _canvas.width, _canvas.height);
 
-    var i,
-      entity,
+    let entity,
       entities = game.entities();
 
-    for (i = entities.length - 1; i >= 0; i--) {
+    for (let i = entities.length - 1; i >= 0; i--) {
       entity = entities[i];
 
       if (entity instanceof Enemy) {

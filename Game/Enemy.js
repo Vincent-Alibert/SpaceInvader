@@ -1,6 +1,6 @@
 "use strict";
-import Entity from "./Entity";
-
+import Entity from "./Entity.js";
+import game from "./Game.js";
 //
 // Enemy Object
 //

@@ -1,4 +1,5 @@
 "use strict";
+import Rectangle from "./Rectangle.js";
 //
 // Entity Object
 //

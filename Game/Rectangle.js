@@ -35,7 +35,7 @@ Rectangle.prototype.intersects = function(r2) {
 };
 
 function rectUnion(r1, r2) {
-  var x, y, width, height;
+  let x, y, width, height;
 
   if (r1 === undefined) {
     return r2;
