@@ -1,5 +1,5 @@
 "use strict";
-import Rectangle from "./Rectangle.js";
+import Rectangle, { rectUnion } from "./Rectangle.js";
 import Player from "./Player.js";
 import Enemy from "./Enemy.js";
 import Vector2d from "./Vector.js";
@@ -9,23 +9,28 @@ import renderer from "./Render.js";
 // Game Object
 //
 const game = (function() {
-  let _entities,
+  let _lastFrameTime,
+    _entities,
     _enemies,
     _player,
     _gameFieldRect,
+    _enemiesRect,
+    _enemySpeed,
+    _enemyFirePercent,
+    _enemyDropAmount,
     _started = false;
 
   function _start() {
+    _lastFrameTime = 0;
     _entities = [];
     _enemies = [];
     _gameFieldRect = new Rectangle(0, 0, 300, 180);
+    _enemiesRect = new Rectangle(0, 0, 0, 0);
+    _enemySpeed = 10;
+    _enemyFirePercent = 10;
+    _enemyDropAmount = 1;
 
-    this.addEntity(new Player(new Vector2d(100, 175), 25, new Vector2d(0, -1)));
-    this.addEntity(new Enemy(new Vector2d(20, 25), 20, new Vector2d(0, 1), 0));
-    this.addEntity(new Enemy(new Vector2d(50, 25), 10, new Vector2d(0, 1), 1));
-    this.addEntity(new Enemy(new Vector2d(80, 25), 15, new Vector2d(0, 1), 2));
-    this.addEntity(new Enemy(new Vector2d(120, 25), 25, new Vector2d(0, 1), 3));
-    this.addEntity(new Enemy(new Vector2d(140, 25), 30, new Vector2d(0, 1), 4));
+    this.addEntity(new Player(new Vector2d(140, 175), 90, new Vector2d(0, 0)));
 
     if (!_started) {
       window.requestAnimationFrame(this.update.bind(this));
@@ -59,13 +64,50 @@ const game = (function() {
     }
   }
 
-  function _update() {
-    const dt = 1 / 60; // Fixed 60 frames per second time step
+  function _update(time) {
+    const dt = Math.min((time - _lastFrameTime) / 1000, 3 / 60);
+    _lastFrameTime = time;
+    // Update Physics
     physics.update(dt);
 
+    // Calculate the bounding rectangle around the enemies
+    _enemiesRect = _enemies.reduce(function(rect, e) {
+      return rectUnion(rect, e.collisionRect());
+    }, undefined);
+
+    // Update Entities
     for (let i = _entities.length - 1; i >= 0; i--) {
       _entities[i].update(dt);
     }
+    // Update Enemy Speed
+    const speed = _enemySpeed + _enemySpeed * (1 - _enemies.length / 50);
+    for (let i = _enemies.length - 1; i >= 0; i--) {
+      _enemies[i].speed = speed;
+    }
+
+    if (_enemies.length === 0) {
+      for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 5; j++) {
+          const dropTarget = 10 + j * 20,
+            position = new Vector2d(50 + i * 20, dropTarget - 100),
+            direction = new Vector2d(1, 0),
+            rank = 4 - j,
+            enemy = new Enemy(position, _enemySpeed, direction, rank);
+
+          enemy.dropTarget = dropTarget;
+          enemy.firePercent = _enemyFirePercent;
+          enemy.dropAmount = _enemyDropAmount;
+
+          this.addEntity(enemy);
+        }
+      }
+
+      _enemySpeed += 5;
+      _enemyFirePercent += 5;
+      _enemyDropAmount += 1;
+    }
+
+    // Render the frame
 
     renderer.render(dt);
 
@@ -87,6 +129,9 @@ const game = (function() {
     },
     gameFieldRect: function() {
       return _gameFieldRect;
+    },
+    enemiesRect: function() {
+      return _enemiesRect;
     }
   };
 })();
