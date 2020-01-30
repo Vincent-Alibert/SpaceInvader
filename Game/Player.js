@@ -1,6 +1,5 @@
 "use strict";
 import Entity from "./Entity.js";
-import Vector2d, { vectorAdd } from "./Vector.js";
 
 function Player(position, speed, direction) {
   Entity.call(this, position, speed, direction);
@@ -13,14 +12,15 @@ function Player(position, speed, direction) {
 Player.prototype = Object.create(Entity.prototype);
 
 Player.prototype.updateDirection = function() {
-  let direction = new Vector2d(0, 0);
+  let x = 0;
   if (this.movingLeft) {
-    direction = vectorAdd(direction, new Vector2d(-1, 0));
+    x -= 1;
   }
   if (this.movingRight) {
-    direction = vectorAdd(direction, new Vector2d(1, 0));
+    x += 1;
   }
-  this.direction = direction;
+
+  this.direction.set(x, 0);
 };
 
 Player.prototype.moveRight = function(enable) {
@@ -34,7 +34,24 @@ Player.prototype.moveLeft = function(enable) {
 };
 
 Player.prototype.fire = function() {
-  console.log("Fire to be implemented");
+  let playerProjectileCount = 0;
+
+  const projectiles = game.projectiles();
+  for (let i = projectiles.length - 1; i >= 0; i--) {
+    if (projectiles[i].type === "player") {
+      playerProjectileCount++;
+    }
+  }
+
+  if (playerProjectileCount === 0) {
+    const proj = game.projectilePool().take();
+    proj.position.set(this.position.x, this.position.y);
+    proj.speed = 180;
+    proj.direction.set(0, -1);
+    proj.type = "player";
+
+    game.addEntity(proj);
+  }
 };
 
 Player.prototype.update = function(dt) {

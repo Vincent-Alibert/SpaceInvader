@@ -9,6 +9,17 @@ function Rectangle(x, y, width, height) {
   this.height = height;
 }
 
+Rectangle.prototype.set = function(x, y, w, h) {
+  this.x = x;
+  this.y = y;
+  this.width = w;
+  this.height = h;
+};
+
+Rectangle.prototype.clone = function() {
+  return new Rectangle(this.x, this.y, this.width, this.height);
+};
+
 Rectangle.prototype.left = function() {
   return this.x;
 };
@@ -34,22 +45,34 @@ Rectangle.prototype.intersects = function(r2) {
   );
 };
 
-export function rectUnion(r1, r2) {
-  let x, y, width, height;
+Rectangle.prototype.containsPoint = function(x, y) {
+  return (
+    this.left() <= x &&
+    x <= this.right() &&
+    this.top() <= y &&
+    y <= this.bottom()
+  );
+};
 
-  if (r1 === undefined) {
-    return r2;
-  }
+Rectangle.prototype.union = function(r2) {
+  var x, y, width, height;
+
   if (r2 === undefined) {
-    return r1;
+    return;
   }
 
-  x = Math.min(r1.x, r2.x);
-  y = Math.min(r1.y, r2.y);
-  width = Math.max(r1.right(), r2.right()) - Math.min(r1.left(), r2.left());
-  height = Math.max(r1.bottom(), r2.bottom()) - Math.min(r1.top(), r2.top());
+  x = Math.min(this.x, r2.x);
+  y = Math.min(this.y, r2.y);
 
-  return new Rectangle(x, y, width, height);
-}
+  width = Math.max(this.right(), r2.right()) - Math.min(this.left(), r2.left());
+
+  height =
+    Math.max(this.bottom(), r2.bottom()) - Math.min(this.top(), r2.top());
+
+  this.x = x;
+  this.y = y;
+  this.width = width;
+  this.height = height;
+};
 
 export default Rectangle;

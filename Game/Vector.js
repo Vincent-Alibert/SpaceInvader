@@ -2,29 +2,42 @@
 //
 // Vector2d Object
 //
+
 const Vector2d = function(x, y) {
   this.x = x;
   this.y = y;
 };
 
-export function vectorAdd(v1, v2) {
-  return new Vector2d(v1.x + v2.x, v1.y + v2.y);
-}
+Vector2d.prototype.set = function(x, y) {
+  this.x = x;
+  this.y = y;
+};
 
-export function vectorSubtract(v1, v2) {
-  return new Vector2d(v1.x - v2.x, v1.y - v2.y);
-}
+Vector2d.prototype.clone = function() {
+  return new Vector2d(this.x, this.y);
+};
 
-export function vectorScalarMultiply(v1, s) {
-  return new Vector2d(v1.x * s, v1.y * s);
-}
+Vector2d.prototype.add = function(v2) {
+  this.x += v2.x;
+  this.y += v2.y;
+};
+
+Vector2d.prototype.subtract = function(v2) {
+  this.x -= v2.x;
+  this.y -= v2.y;
+};
+
+Vector2d.prototype.scalarMultiply = function(s) {
+  this.x *= s;
+  this.y *= s;
+};
 
 export function vectorLength(v) {
   return Math.sqrt(v.x * v.x + v.y * v.y);
 }
 
 export function vectorNormalize(v) {
-  const reciprocal = 1.0 / (vectorLength(v) + 1.0e-37); // Prevent division by zero.
+  var reciprocal = 1.0 / (vectorLength(v) + 1.0e-37); // Prevent division by zero.
   return vectorScalarMultiply(v, reciprocal);
 }
 
